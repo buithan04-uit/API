@@ -1,5 +1,5 @@
 const express = require('express');
-const { signUp, logIn, logOut, forgetPassword, verifyCode, changeForget, dashBoard,
+const { signUp, logIn, logOut, forgetPassword, verifyCode, resendCode, changeForget, dashBoard,
     mapView, profile, setting, deleteAccount, changePassword, update
     , api } = require('../controller/Controller');
 
@@ -10,6 +10,7 @@ router.post('/auth/log_in', logIn);
 router.post('/auth/log_out', logOut);
 router.post('/auth/forget_password', forgetPassword);
 router.post('/auth/verify_code', verifyCode);
+router.get('/auth/forget_password/resend_code', resendCode);
 router.post('/auth/change_forget', changeForget);
 
 // Dashboard route

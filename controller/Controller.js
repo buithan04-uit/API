@@ -18,7 +18,7 @@ const signUp = async (req, res) => {
         res.status(201).json({ message: 'User created successfully' });
     }
     else {
-        res.status(201).json({ message: 'User already exist' });
+        res.status(201).json({ message: 'Error : Email already exist' });
     }
 
 };
@@ -27,7 +27,7 @@ const logIn = async (req, res) => {
     let userLogin = req.body;
     let [results, failed] = await findUserByEmail(userLogin.email);
     if (results == undefined) {
-        res.status(201).json({ message: 'User not found' });
+        res.status(201).json({ message: 'Error : User not found' });
     }
     else {
         if (bcrypt.compareSync(userLogin.password, results.password)) {
@@ -35,7 +35,7 @@ const logIn = async (req, res) => {
             res.status(200).json({ message: 'Login successfully' });
         }
         else {
-            res.status(201).json({ message: 'Password incorrect' });
+            res.status(201).json({ message: 'Err1 : Password incorrect' });
         }
     }
 };
@@ -50,26 +50,34 @@ const forgetPassword = async (req, res) => {
     emailGlobal = emailUser.email;
     let [results, fields] = await findUserByEmail(emailUser.email);
     if (results == undefined) {
-        res.status(200).json({ message: 'Email not exist' });
+        res.status(200).json({ message: 'Error: Email not exist' });
     }
     else {
         let varRandom = generateRandomString(6);
         verifyCodeGlobal = varRandom;
         console.log(varRandom);
-        res.status(200).json({ message: 'Verify Code was send : ', varRandom });
+        res.status(200).json({ message: 'Verify Code was send to your email !' });
         sendVerificationEmail(emailUser.email, varRandom);
     }
 
 }
 
+const resendCode = async (req, res) => {
+    let varRandom = generateRandomString(6);
+    verifyCodeGlobal = varRandom;
+    console.log(varRandom);
+    res.status(200).json({ message: 'Verify Code was send to your email !' });
+    sendVerificationEmail(emailUser.email, varRandom);
+}
+
 const verifyCode = async (req, res) => {
     let verify = req.body;
-    if (verifyCodeGlobal == verify.code) {
+    if (verifyCodeGlobal === verify.code) {
         res.status(200).json({ message: 'Verify Code is correct' });
         verifyCodeGlobal = '';
     }
     else {
-        res.status(200).json({ message: 'Verify Code is incorrect' });
+        res.status(200).json({ message: 'Error : Verify Code is incorrect' });
     }
 };
 
@@ -92,6 +100,8 @@ const mapView = async (req, res) => {
 // Profile routes
 
 const profile = async (req, res) => {
+    let [results, fields] = await findUserByEmail(emailGlobal);
+
     res.status(200).json({ message: 'Here is Profile' });
 };
 // Setting routes
@@ -138,6 +148,7 @@ module.exports = {
     logIn,
     logOut,
     forgetPassword,
+    resendCode,
     verifyCode,
     changeForget,
     dashBoard,
