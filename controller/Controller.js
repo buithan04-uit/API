@@ -18,7 +18,7 @@ const signUp = async (req, res) => {
         res.status(201).json({ message: 'User created successfully' });
     }
     else {
-        res.status(201).json({ message: 'Error : Email already exist' });
+        res.status(201).json({ message: 'Error1 : Email is used' });
     }
 
 };
