@@ -1,6 +1,8 @@
 
 const { emit } = require('nodemon');
 const { validate } = require('deep-email-validator');
+const emailExistence = require('email-existence');
+
 const connection = require('../config/Database');
 
 const createUser = async (firstname, lastname, email, sdt, password) => {
@@ -72,34 +74,15 @@ async function sendVerificationEmail(userEmail, verificationCode) {
 }
 
 async function isEmailValid(email) {
-    let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: 'than.65.cvan@gmail.com', // tài khoản email của bạn
-            pass: 'urzq rcft pshx xhuh', // mật khẩu email của bạn
-        },
-    });
-
-    try {
-        // Kiểm tra kết nối với máy chủ SMTP
-        await transporter.verify();
-
-        // Gửi email kiểm tra
-        let info = await transporter.sendMail({
-            from: 'than.65.cvan@gmail.com', // địa chỉ email của bạn
-            to: email, // địa chỉ email cần kiểm tra
-            subject: 'Email Verification',
-            text: 'This is a test email for verification purposes.',
+    return new Promise((resolve, reject) => {
+        emailExistence.check(email, (error, response) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(response);
+            }
         });
-
-        console.log('Email sent:', info.messageId);
-        return true;
-    } catch (error) {
-        console.error('Error verifying email:', error);
-        return false;
-    }
+    });
 }
 
 
