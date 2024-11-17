@@ -6,27 +6,27 @@ const { createUser, findUserByEmail, getAllUsers, generateRandomString, sendVeri
 let verifyCodeGlobal = '';
 let emailGlobal = '';
 
-
 // Authentication routes
 const signUp = async (req, res) => {
+
     let newUser = req.body;
     const { valid, reason } = await isEmailValid(newUser.email);
     if (!valid) {
-        return res.status(201).json({ message: `Error2 : Invalid email address: ${reason}` });
+        return res.status(201).json({ message: 'Error2 : Invalid email address' });
+    }
+    let [results, fields] = await findUserByEmail(newUser.email);
+    if (results == undefined) {
+        hashpassword = bcrypt.hashSync(newUser.password, 10);
+        await createUser(newUser.firstname, newUser.lastname, newUser.email, newUser.sdt, hashpassword);
+        res.status(201).json({ message: 'User created successfully' });
     }
     else {
-        let [results, fields] = await findUserByEmail(newUser.email);
-        if (results == undefined) {
-            hashpassword = bcrypt.hashSync(newUser.password, 10);
-            await createUser(newUser.firstname, newUser.lastname, newUser.email, newUser.sdt, hashpassword);
-            res.status(201).json({ message: 'User created successfully' });
-        }
-        else {
-            res.status(201).json({ message: 'Error1 : Email is used' });
-        }
+        res.status(201).json({ message: 'Error1 : Email is used' });
     }
 
 };
+
+
 
 const logIn = async (req, res) => {
     let userLogin = req.body;
