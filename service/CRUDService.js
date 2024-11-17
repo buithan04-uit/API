@@ -1,5 +1,6 @@
 
 const { emit } = require('nodemon');
+const { validate } = require('deep-email-validator');
 const connection = require('../config/Database');
 
 const createUser = async (firstname, lastname, email, sdt, password) => {
@@ -70,6 +71,11 @@ async function sendVerificationEmail(userEmail, verificationCode) {
     }
 }
 
+async function isEmailValid(email) {
+    const { valid, reason } = await validate(email);
+    return { valid, reason };
+}
+
 
 module.exports = {
     createUser,
@@ -77,5 +83,6 @@ module.exports = {
     getAllUsers,
     generateRandomString,
     sendVerificationEmail,
-    updatePassword
+    updatePassword,
+    isEmailValid
 };

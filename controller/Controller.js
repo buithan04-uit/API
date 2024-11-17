@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { createUser, findUserByEmail, getAllUsers, generateRandomString, sendVerificationEmail, updatePassword } = require('../service/CRUDService');
+const { createUser, findUserByEmail, getAllUsers, generateRandomString, sendVerificationEmail, updatePassword, isEmailValid } = require('../service/CRUDService');
 
 
 let verifyCodeGlobal = '';
@@ -9,8 +9,11 @@ let emailGlobal = '';
 
 // Authentication routes
 const signUp = async (req, res) => {
-
     let newUser = req.body;
+    const { valid, reason } = await isEmailValid(newUser.email);
+    if (!valid) {
+        return res.status(400).json({ message: `Error2 : Invalid email address: ${reason}` });
+    }
     let [results, fields] = await findUserByEmail(newUser.email);
     if (results == undefined) {
         hashpassword = bcrypt.hashSync(newUser.password, 10);
