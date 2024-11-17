@@ -10,7 +10,6 @@ let emailGlobal = '';
 const signUp = async (req, res) => {
 
     let newUser = req.body;
-    const { valid, reason } = await isEmailValid(newUser.email);
     let [results, fields] = await findUserByEmail(newUser.email);
     if (results == undefined) {
         hashpassword = bcrypt.hashSync(newUser.password, 10);
