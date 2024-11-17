@@ -2,6 +2,9 @@
 const { emit } = require('nodemon');
 const { validate } = require('deep-email-validator');
 const emailExistence = require('email-existence');
+const nodemailer = require('nodemailer');
+
+
 
 const connection = require('../config/Database');
 
@@ -74,15 +77,35 @@ async function sendVerificationEmail(userEmail, verificationCode) {
 }
 
 async function isEmailValid(email) {
-    return new Promise((resolve, reject) => {
-        emailExistence.check(email, (error, response) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(response);
-            }
-        });
+    let transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: 'your-email@gmail.com', // tài khoản email của bạn
+            pass: 'your-email-password', // mật khẩu email của bạn
+        },
     });
+
+    try {
+        // Kiểm tra kết nối với máy chủ SMTP
+        await transporter.verify();
+
+        // Thực hiện kiểm tra email mà không gửi
+        await transporter.sendMail({
+            from: 'your-email@gmail.com',
+            to: email,
+            subject: 'Email Verification',
+            text: 'This is a test email for verification purposes.',
+        });
+
+        // Nếu không có lỗi, email tồn tại
+        return true;
+    } catch (error) {
+        // Nếu có lỗi, email không tồn tại
+        console.error('Error verifying email:', error);
+        return false;
+    }
 }
 
 
