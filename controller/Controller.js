@@ -22,7 +22,9 @@ const signUp = async (req, res) => {
         res.status(201).json({ message: 'User created successfully' });
     }
     else {
-        res.status(201).json({ message: 'Error1 : Email is used' });
+        setTimeout(() => {
+            res.status(201).json({ message: 'Error1 : Email is used' });
+        }, 2000); // 2 seconds delay
     }
 
 };
