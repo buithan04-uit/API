@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { createUser, findUserByEmail, getAllUsers, generateRandomString, sendVerificationEmail, updatePassword, isEmailValid } = require('../service/CRUDService');
+const { createUser, findUserByEmail, getAllUsers, generateRandomString, sendVerificationEmail, updatePassword } = require('../service/CRUDService');
 
 
 let verifyCodeGlobal = '';
@@ -11,20 +11,16 @@ let emailGlobal = '';
 const signUp = async (req, res) => {
 
     let newUser = req.body;
-    const { valid } = isEmailValid(newUser.email);
-    if (valid) {
-        let [results, fields] = await findUserByEmail(newUser.email);
-        if (results == undefined) {
-            hashpassword = bcrypt.hashSync(newUser.password, 10);
-            await createUser(newUser.firstname, newUser.lastname, newUser.email, newUser.sdt, hashpassword);
-            res.status(201).json({ message: 'User created successfully' });
-        }
-        else {
-            res.status(401).json({ message: 'Error1 : Email is used' });
-        }
-    } else {
-        console.log('Error2 : Email not exist');
+    let [results, fields] = await findUserByEmail(newUser.email);
+    if (results == undefined) {
+        hashpassword = bcrypt.hashSync(newUser.password, 10);
+        await createUser(newUser.firstname, newUser.lastname, newUser.email, newUser.sdt, hashpassword);
+        res.status(201).json({ message: 'User created successfully' });
     }
+    else {
+        res.status(201).json({ message: 'Error : Email already exist' });
+    }
+
 };
 
 const logIn = async (req, res) => {

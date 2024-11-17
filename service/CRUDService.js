@@ -70,26 +70,6 @@ async function sendVerificationEmail(userEmail, verificationCode) {
     }
 }
 
-const { validate } = require('deep-email-validator');
-
-async function isEmailValid(email) {
-    const { valid, reason, validators } = await validate(email);
-    if (valid) {
-        console.log('Email is valid');
-    } else {
-        console.log(`Email is invalid: ${reason}`);
-    }
-    return valid;
-}
-
-// Ví dụ sử dụng
-isEmailValid('example@example.com').then(valid => {
-    if (valid) {
-        console.log('Email tồn tại');
-    } else {
-        console.log('Email không tồn tại');
-    }
-});
 
 module.exports = {
     createUser,
@@ -97,6 +77,5 @@ module.exports = {
     getAllUsers,
     generateRandomString,
     sendVerificationEmail,
-    updatePassword,
-    isEmailValid
+    updatePassword
 };
