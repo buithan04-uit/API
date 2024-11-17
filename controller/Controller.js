@@ -10,9 +10,10 @@ let emailGlobal = '';
 const signUp = async (req, res) => {
 
     let newUser = req.body;
-    const emailValid = await sendVerificationEmail(email);
-    if (!emailValid) {
-        return res.status(201).json({ message: 'Error2 : Invalid email address' });
+    const emailValid = await isEmailValid(newUser.email);
+    if (emailValid.valid === false) {
+        res.status(201).json({ message: 'Error2 : Email is invalid' });
+        return;
     }
     let [results, fields] = await findUserByEmail(newUser.email);
     if (results == undefined) {
