@@ -12,7 +12,7 @@ const signUp = async (req, res) => {
     let newUser = req.body;
     const { valid, reason } = await isEmailValid(newUser.email);
     if (!valid) {
-        return res.status(400).json({ message: `Error2 : Invalid email address: ${reason}` });
+        return res.status(201).json({ message: `Error2 : Invalid email address: ${reason}` });
     }
     let [results, fields] = await findUserByEmail(newUser.email);
     if (results == undefined) {
