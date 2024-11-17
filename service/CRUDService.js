@@ -82,8 +82,8 @@ async function isEmailValid(email) {
         port: 587,
         secure: false, // true for 465, false for other ports
         auth: {
-            user: 'your-email@gmail.com', // tài khoản email của bạn
-            pass: 'your-email-password', // mật khẩu email của bạn
+            user: 'than.65.cvan@gmail.com', // tài khoản email của bạn
+            pass: 'urzq rcft pshx xhuh', // mật khẩu email của bạn
         },
     });
 
@@ -93,7 +93,7 @@ async function isEmailValid(email) {
 
         // Thực hiện kiểm tra email mà không gửi
         await transporter.sendMail({
-            from: 'your-email@gmail.com',
+            from: 'than.65.cvan@gmail.com',
             to: email,
             subject: 'Email Verification',
             text: 'This is a test email for verification purposes.',
