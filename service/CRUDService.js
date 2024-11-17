@@ -32,7 +32,7 @@ const updatePassword = async (newpassword, email) => {
 }
 
 function generateRandomString(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = '0123456789';
     let result = '';
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
@@ -72,8 +72,34 @@ async function sendVerificationEmail(userEmail, verificationCode) {
 }
 
 async function isEmailValid(email) {
-    const { valid, reason } = await validate(email);
-    return { valid, reason };
+    let transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: 'than.65.cvan@gmail.com', // tài khoản email của bạn
+            pass: 'urzq rcft pshx xhuh', // mật khẩu email của bạn
+        },
+    });
+
+    try {
+        // Kiểm tra kết nối với máy chủ SMTP
+        await transporter.verify();
+
+        // Gửi email kiểm tra
+        let info = await transporter.sendMail({
+            from: 'than.65.cvan@gmail.com', // địa chỉ email của bạn
+            to: email, // địa chỉ email cần kiểm tra
+            subject: 'Email Verification',
+            text: 'This is a test email for verification purposes.',
+        });
+
+        console.log('Email sent:', info.messageId);
+        return true;
+    } catch (error) {
+        console.error('Error verifying email:', error);
+        return false;
+    }
 }
 
 
