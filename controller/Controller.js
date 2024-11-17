@@ -10,10 +10,6 @@ let emailGlobal = '';
 const signUp = async (req, res) => {
 
     let newUser = req.body;
-    const valid = await isEmailValid(newUser.email);
-    if (!valid) {
-        return res.status(201).json({ message: 'Error2 : Invalid email address' });
-    }
     let [results, fields] = await findUserByEmail(newUser.email);
     if (results == undefined) {
         hashpassword = bcrypt.hashSync(newUser.password, 10);
