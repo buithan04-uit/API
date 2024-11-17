@@ -14,14 +14,16 @@ const signUp = async (req, res) => {
     if (!valid) {
         return res.status(201).json({ message: `Error2 : Invalid email address: ${reason}` });
     }
-    let [results, fields] = await findUserByEmail(newUser.email);
-    if (results == undefined) {
-        hashpassword = bcrypt.hashSync(newUser.password, 10);
-        await createUser(newUser.firstname, newUser.lastname, newUser.email, newUser.sdt, hashpassword);
-        res.status(201).json({ message: 'User created successfully' });
-    }
     else {
-        res.status(201).json({ message: 'Error1 : Email is used' });
+        let [results, fields] = await findUserByEmail(newUser.email);
+        if (results == undefined) {
+            hashpassword = bcrypt.hashSync(newUser.password, 10);
+            await createUser(newUser.firstname, newUser.lastname, newUser.email, newUser.sdt, hashpassword);
+            res.status(201).json({ message: 'User created successfully' });
+        }
+        else {
+            res.status(201).json({ message: 'Error1 : Email is used' });
+        }
     }
 
 };
