@@ -1,7 +1,6 @@
 
 const { emit } = require('nodemon');
 const { validate } = require('deep-email-validator');
-const emailExistence = require('email-existence');
 const nodemailer = require('nodemailer');
 
 
@@ -46,7 +45,7 @@ function generateRandomString(length) {
     return result;
 }
 
-const nodemailer = require('nodemailer');
+
 
 // Hàm gửi mã xác nhận qua email
 async function sendVerificationEmail(userEmail, verificationCode) {
