@@ -77,7 +77,12 @@ async function sendVerificationEmail(userEmail, verificationCode) {
 
 async function isEmailValid(email) {
     try {
-        const { valid, reason, validators } = await validate(email);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 seconds timeout
+
+        const { valid, reason, validators } = await validate(email, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
         if (valid) {
             return true;
         } else {
@@ -85,7 +90,11 @@ async function isEmailValid(email) {
             return false;
         }
     } catch (error) {
-        console.error('Error validating email:', error);
+        if (error.name === 'AbortError') {
+            console.error('Email validation timed out');
+        } else {
+            console.error('Error validating email:', error);
+        }
         return false;
     }
 }
