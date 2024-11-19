@@ -76,36 +76,20 @@ async function sendVerificationEmail(userEmail, verificationCode) {
 }
 
 async function isEmailValid(email) {
-    let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: 'than.65.cvan@gmail.com', // tài khoản email của bạn
-            pass: 'urzq rcft pshx xhuh', // mật khẩu email của bạn
-        },
-    });
-
     try {
-        // Kiểm tra kết nối với máy chủ SMTP
-        await transporter.verify();
-
-        // Thực hiện kiểm tra email mà không gửi
-        await transporter.sendMail({
-            from: 'than.65.cvan@gmail.com',
-            to: email,
-            subject: 'Email Verification',
-            text: 'This is a test email for verification purposes.',
-        });
-
-        // Nếu không có lỗi, email tồn tại
-        return true;
+        const { valid, reason, validators } = await validate(email);
+        if (valid) {
+            return true;
+        } else {
+            console.error('Invalid email:', reason, validators);
+            return false;
+        }
     } catch (error) {
-        // Nếu có lỗi, email không tồn tại
-        console.error('Error verifying email:', error);
+        console.error('Error validating email:', error);
         return false;
     }
 }
+
 
 
 module.exports = {
